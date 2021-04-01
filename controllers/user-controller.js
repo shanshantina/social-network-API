@@ -1,17 +1,9 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     // get all the user
     getAllUser(req, res) {
         User.find({})
-          .populate({
-              path: 'thoughts',
-              select: '-__v'
-          })
-          .populate({
-            path: 'friends',
-            select: '-__v'
-          })
           .select('-__v')
           .then(dbUserData => res.json(dbUserData))
           .catch(err => {
@@ -25,12 +17,10 @@ const userController = {
     getUserById({params}, res) {
         User.findOne({ _id: params.id })
           .populate({
-              path: 'thoughts',
-              select: '-__v'
+              path: 'thoughts'
           })
           .populate({
-            path: 'friends',
-            select: '-__v'
+            path: 'friends'
           })
           .select('-__v')
           .then(dbUserData => {
@@ -77,7 +67,21 @@ const userController = {
                 res.status(404).json({ message: 'No user found with this id!' });
                 return;
             }
-            res.json({ message: 'User deleted' });
+            // remove the user from friend list
+            User.updateMany(
+              {_id: { $in: dbUserData.friends }},
+              {$pull: { friends: params.id }},
+              { new: true }
+            )
+            .then(() => {
+              // remove the thoughts wrote by deleted user
+              Thought.deleteMany({ username: dbUserData.username })
+              .then(() => {
+                res.json({ message: 'User and associated thoughts had been deleted!' });
+              })
+              .catch(err => res.status(400).json(err));
+            })
+            .catch(err => res.status(400).json(err));
           })
           .catch(err => res.status(400).json(err));
     },

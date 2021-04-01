@@ -4,11 +4,6 @@ const thoughtController = {
     // get all thoughts
     getAllThought(req, res) {
         Thought.find({})
-          .populate({
-            path: 'reactions',
-            select: '-__v'
-          })
-          .select('-__v')
           .then(dbThoughtData => res.json(dbThoughtData))
           .catch(err => {
               console.log(err);
@@ -20,11 +15,6 @@ const thoughtController = {
     // get single thought
     getThoughtById({params}, res) {
         Thought.findOne({ _id: params.id })
-        .populate({
-            path: 'reactions',
-            select: '-__v'
-        })
-        .select('-__v')
         .then(dbThoughtData => {
             if(!dbThoughtData) {
                 res.status(404).json({ message: 'No thought found with this id!' });
@@ -93,7 +83,7 @@ const thoughtController = {
                 res.status(404).json({ message: 'No user found with this id!' });
                 return;
               }
-              res.json(dbUserData);
+              res.json({ message: 'The thought had been deleted!' });
           })
           .catch(err => res.status(400).json(err));          
     },
