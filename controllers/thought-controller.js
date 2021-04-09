@@ -7,7 +7,7 @@ const thoughtController = {
           .then(dbThoughtData => res.json(dbThoughtData))
           .catch(err => {
               console.log(err);
-              res.status(400).json(err);
+              res.status(500).json(err);
           });
     },
 
@@ -24,7 +24,7 @@ const thoughtController = {
         })
         .catch(err => {
             console.log(err);
-            res.status(400).json(err);
+            res.status(500).json(err);
         });
     },
 
@@ -47,7 +47,7 @@ const thoughtController = {
               }
               res.json(dbUserData);
           })
-          .catch(err => res.status(400).json(err));
+          .catch(err => res.status(500).json(err));
     },
 
 
@@ -61,7 +61,7 @@ const thoughtController = {
             }
             res.json(dbThoughtData);
           })
-          .catch(err => res.status(400).json(err));
+          .catch(err => res.status(500).json(err));
     },
 
 
@@ -85,7 +85,7 @@ const thoughtController = {
               }
               res.json({ message: 'The thought had been deleted!' });
           })
-          .catch(err => res.status(400).json(err));          
+          .catch(err => res.status(500).json(err));          
     },
 
 
@@ -103,7 +103,7 @@ const thoughtController = {
               }
               res.json(dbUserData);
           })
-          .catch(err => res.status(400).json(err)); 
+          .catch(err => res.status(500).json(err)); 
     },
 
 
@@ -115,7 +115,7 @@ const thoughtController = {
             { new: true }
         )
           .then(dbUserData => res.json(dbUserData))
-          .catch(err => res.status(400).json(err)); 
+          .catch(err => res.status(500).json(err)); 
     }
 };
 
